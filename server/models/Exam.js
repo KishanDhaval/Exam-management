@@ -1,41 +1,52 @@
 // models/Exam.js
-import mongoose from 'mongoose';
+import mongoose from "mongoose";
 
-const examSchema = new mongoose.Schema({
-  title: {
-    type: String,
-    required: true,
-    trim: true
+const examSchema = new mongoose.Schema(
+  {
+    title: {
+      type: String,
+      required: true,
+      trim: true,
+    },
+    description: String,
+    // when students can start attempting
+    startDate: {
+      type: Date,
+      required: true,
+    },
+    // when submissions close
+    endDate: {
+      type: Date,
+      required: true,
+    },
+    // in minutes
+    duration: {
+      type: Number,
+      required: true,
+    },
+    // which teacher created this exam
+    createdBy: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "User",
+      required: true,
+    },
+    // questions are stored separately in Question model
+    questions: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Question",
+      },
+    ],
+    participants: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "User",
+      },
+    ],
   },
-  description: String,
-  // when students can start attempting
-  startDate: {
-    type: Date,
-    required: true
-  },
-  // when submissions close
-  endDate: {
-    type: Date,
-    required: true
-  },
-  // in minutes
-  duration: {
-    type: Number,
-    required: true
-  },
-  // which teacher created this exam
-  createdBy: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: 'User',
-    required: true
-  },
-  // questions are stored separately in Question model
-  questions: [{
-    type: mongoose.Schema.Types.ObjectId,
-    ref: 'Question'
-  }]
-}, {
-  timestamps: true
-});
+  {
+    timestamps: true,
+  }
+);
 
-export default mongoose.model('Exam', examSchema);
+export default mongoose.model("Exam", examSchema);

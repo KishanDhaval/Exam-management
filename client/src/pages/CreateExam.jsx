@@ -1,12 +1,12 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useExamStore } from '../store/examStore';
 import { ArrowLeft, Plus, Save, Trash2 } from 'lucide-react';
 import axiosInstance from '../utils/axiosConfig';
+import { useExamContext } from '../hooks/useExamContext';
 
 function CreateExam() {
+  const {setExams} = useExamContext()
   const navigate = useNavigate();
-  const createExam = useExamStore((state) => state.createExam);
   const [loading, setLoading] = useState(false);
   const [examData, setExamData] = useState({
     title: '',
@@ -32,10 +32,9 @@ function CreateExam() {
   const handleExamSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
-    try {
-        console.log(examData);
-        
-      await axiosInstance.post('/exam/create' , examData);
+    try {        
+      const {data} = await axiosInstance.post('/exam/create' , examData);
+      setExams(prevExams => [...prevExams, data]);
       navigate('/dashboard/teacher');
     } catch (error) {
       console.error('Failed to create exam:', error);
@@ -77,7 +76,7 @@ function CreateExam() {
       ...prev,
       options: prev.options.map((option, i) => 
         i === optionIndex 
-          ? { ...option, [field]: field === 'isCorrect' ? value : value.trim() }
+          ? { ...option, [field]: field === 'isCorrect' ? value : value }
           : field === 'isCorrect' ? { ...option, isCorrect: false } : option
       )
     }));

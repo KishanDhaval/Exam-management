@@ -3,7 +3,7 @@ import mongoose from 'mongoose';
 
 const optionSchema = new mongoose.Schema({
   text: { type: String, required: true },
-  // you could also store the correct answer flag here
+
   isCorrect: { type: Boolean, default: false }
 });
 

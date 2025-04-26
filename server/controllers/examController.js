@@ -6,7 +6,6 @@ export const createExam = async (req, res) => {
   try {
     const { title, description, startDate, endDate, duration, questions } =
       req.body;
-
     // 1) create the exam shell
     const exam = new Exam({
       title,
@@ -42,6 +41,7 @@ export const createExam = async (req, res) => {
 
     res.status(201).json(populated);
   } catch (err) {
+    console.log(err);
     res.status(400).json({ message: err.message });
   }
 };

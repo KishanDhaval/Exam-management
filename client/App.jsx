@@ -12,6 +12,7 @@ import StudentDashboard from "./src/pages/StudentDashboard";
 import TeacherDashboard from "./src/pages/TeacherDashboard";
 import { useAuthContext } from "./src/hooks/useAuthContext";
 import CreateExam from "./src/pages/CreateExam";
+import TakeExam from "./src/pages/TakeExam";
 
 function App() {
   const { user } = useAuthContext();
@@ -67,6 +68,14 @@ function App() {
           element={
             <ProtectedRoute allowedRoles={["teacher"]}>
               <CreateExam />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/exams/take/:examId"
+          element={
+            <ProtectedRoute allowedRoles={['student']}>
+              <TakeExam/>
             </ProtectedRoute>
           }
         />
