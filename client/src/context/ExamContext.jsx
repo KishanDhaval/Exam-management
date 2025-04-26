@@ -1,6 +1,7 @@
 import { createContext, useEffect, useState } from "react";
 import axiosInstance from "../utils/axiosConfig";
 import { Loader2 } from "lucide-react";
+import { useAuthContext } from "../hooks/useAuthContext";
 
 export const ExamContext = createContext();
 
@@ -11,6 +12,8 @@ export const ExamContextProvider = ({ children }) => {
   const [loading, setLoading] = useState(true);
   const [fetchStudentItem, setFetchStudentItem] = useState(false);
   const [fetchTeacherItem, setFetchTeacherItem] = useState(false);
+
+  const { user } = useAuthContext();
 
   const fetchExams = async () => {
     try {
@@ -27,16 +30,15 @@ export const ExamContextProvider = ({ children }) => {
       setResults(data);
     } catch (error) {
       console.log(error);
-    } finally {
-      setLoading(false);
-    }
+    } 
   };
 
   const fetchTeacherData = async () => {
     try {
-      setLoading(true);
-      const { data } = await axiosInstance.get("/result/teacher");
-      setTeacherResults(data);
+      if (user.role === "teacher") {
+        const { data } = await axiosInstance.get("/result/teacher");
+        setTeacherResults(data);
+      }
     } catch (error) {
       console.log(error);
     } finally {

@@ -6,13 +6,14 @@ import {
   Navigate,
 } from "react-router-dom";
 import ProtectedRoute from "./src/Components/Auth/ProtectedRoute";
-import Login from "./src/pages/Login";
-import Register from "./src/pages/Register";
+import Login from "./src/pages/auth/Login";
+import Register from "./src/pages/auth/Register";
 import StudentDashboard from "./src/pages/StudentDashboard";
 import TeacherDashboard from "./src/pages/TeacherDashboard";
 import { useAuthContext } from "./src/hooks/useAuthContext";
 import CreateExam from "./src/pages/CreateExam";
 import TakeExam from "./src/pages/TakeExam";
+import ProfileSettings from "./src/pages/ProfileSettings";
 
 function App() {
   const { user } = useAuthContext();
@@ -23,7 +24,7 @@ function App() {
           path="/login"
           element={
             !user ? (
-              <Login />
+              <Login/>
             ) : user.role === "student" ? (
               <Navigate to={"/dashboard/student"} />
             ) : (
@@ -74,12 +75,19 @@ function App() {
         <Route
           path="/exams/take/:examId"
           element={
-            <ProtectedRoute allowedRoles={['student']}>
-              <TakeExam/>
+            <ProtectedRoute allowedRoles={["student"]}>
+              <TakeExam />
             </ProtectedRoute>
           }
         />
-
+        <Route
+          path="/profile/settings"
+          element={
+            <ProtectedRoute>
+              <ProfileSettings />
+            </ProtectedRoute>
+          }
+        />
         {/* catch-all */}
         <Route path="*" element={<Navigate to="/login" replace />} />
       </Routes>

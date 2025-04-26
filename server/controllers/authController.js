@@ -88,9 +88,7 @@ export const loginController = async (req, res) => {
         token,
       },
     });
-  } catch (error) {
-    console.log(error);
-    
+  } catch (error) {    
     res.status(500).json({
       success: false,
       message: error.message,
@@ -131,19 +129,16 @@ export const getUserById = async (req, res) => {
 };
 
 export const updateProfile = async (req, res) => {
-  const { name, userName, about } = req.body;
+  const { name,phoneNumber } = req.body;
   const userId = req.user._id;
 
   try {
     const updatedUser = await User.findByIdAndUpdate(
       userId,
-      { name, userName, about },
+      { name, phoneNumber },
       { new: true }
     )
       .select("-password")
-      .populate("challengeSubmissions")
-      .populate("componentSubmissions")
-      .populate("winning"); // Exclude password from response
 
     if (!updatedUser) {
       return res.status(404).json({

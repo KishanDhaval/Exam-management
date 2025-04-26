@@ -10,8 +10,9 @@ import {
 } from "lucide-react";
 import { useAuthContext } from "../hooks/useAuthContext";
 import { useExamContext } from "../hooks/useExamContext";
-import LogoutBtn from "../Components/LogoutBtn";
-import TeacherResultsModal from "../Components/TeacherResultsModel";
+import LogoutBtn from "../Components/Auth/LogoutBtn";
+import TeacherResultsModal from "../Components/model/TeacherResultsModel";
+import ProfileSettingBtn from "../Components/ProfileSettingBtn";
 
 function TeacherDashboard() {
   const navigate = useNavigate();
@@ -39,10 +40,7 @@ function TeacherDashboard() {
               <PlusCircle className="w-5 h-5 sm:mr-2" />
               <p className="hidden sm:block">Create New Exam</p>
             </button>
-            <button className="flex items-center text-gray-600 hover:text-gray-900">
-              <Settings className="w-5 h-5 mr-2" />
-              <p className="hidden sm:block">Profile Settings</p>
-            </button>
+            <ProfileSettingBtn />
             <LogoutBtn />
           </div>
         </div>
