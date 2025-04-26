@@ -10,7 +10,6 @@ import {
   AlertCircle,
 } from "lucide-react";
 import { useAuthContext } from "../hooks/useAuthContext";
-import { useLogout } from "../hooks/useLogout";
 import { useExamContext } from "../hooks/useExamContext";
 import ResultDetailsModal from "../Components/ResultDetailsModel";
 import LogoutBtn from "../Components/LogoutBtn";
@@ -19,7 +18,6 @@ function StudentDashboard() {
   const navigate = useNavigate();
   const { user } = useAuthContext();
   const { exams ,results} = useExamContext();
-  const { logout } = useLogout();
   const [selectedResult, setSelectedResult] = useState(null);
   
   const getExamStatus = (exam) => {

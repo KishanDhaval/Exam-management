@@ -7,40 +7,66 @@ export const ExamContext = createContext();
 export const ExamContextProvider = ({ children }) => {
   const [exams, setExams] = useState("");
   const [results, setResults] = useState("");
+  const [teacherResults, setTeacherResults] = useState("");
   const [loading, setLoading] = useState(true);
-  const [fetch , setFetch] = useState(false);
+  const [fetchStudentItem, setFetchStudentItem] = useState(false);
+  const [fetchTeacherItem, setFetchTeacherItem] = useState(false);
 
   const fetchExams = async () => {
     try {
       const { data } = await axiosInstance.get("/exam/");
       setExams(data);
-      console.log(data);
     } catch (error) {
       console.log(error);
     }
   };
 
-  const fetchResults = async()=>{
+  const fetchResults = async () => {
     try {
-      setLoading(true)
       const { data } = await axiosInstance.get("/result/student");
       setResults(data);
-      console.log(data);
     } catch (error) {
       console.log(error);
     } finally {
       setLoading(false);
     }
-  }
+  };
+
+  const fetchTeacherData = async () => {
+    try {
+      setLoading(true);
+      const { data } = await axiosInstance.get("/result/teacher");
+      setTeacherResults(data);
+    } catch (error) {
+      console.log(error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchTeacherData();
+  }, [fetchTeacherItem]);
 
   useEffect(() => {
     fetchExams();
-    fetchResults()
-    setFetch(false)
-  }, [fetch]);
+    fetchResults();
+    setFetchStudentItem(false);
+  }, [fetchStudentItem]);
 
   return (
-    <ExamContext.Provider value={{ exams, loading, setLoading ,  setResults,  results ,  setFetch}}>
+    <ExamContext.Provider
+      value={{
+        exams,
+        loading,
+        setLoading,
+        setResults,
+        results,
+        teacherResults,
+        setFetchStudentItem,
+        setFetchTeacherItem,
+      }}
+    >
       {loading ? (
         <div className="min-h-screen flex items-center justify-center">
           <Loader2 className="w-8 h-8 animate-spin text-indigo-600" />

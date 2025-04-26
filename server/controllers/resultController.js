@@ -46,8 +46,8 @@ export const submitResult = async (req, res) => {
 
 export const getResultsForStudent = async (req, res) => {
   try {
-    const studentId = req.user._id
-   
+    const studentId = req.user._id;
+
     const results = await Result.find({ student: studentId })
       // already populating exam info
       .populate("exam", "title startDate endDate")
@@ -85,5 +85,81 @@ export const getResultsByExam = async (req, res) => {
     res.json(results);
   } catch (err) {
     res.status(500).json({ message: err.message });
+  }
+};
+
+export const getTeacherDashboard = async (req, res) => {
+  try {
+    const teacherId = req.user._id;
+    const now = new Date();
+
+    // 1) Load all exams for this teacher
+    const exams = await Exam.find({ createdBy: teacherId });
+    const examIds = exams.map((e) => e._id);
+
+    // 2) Compute totals & stats
+    const totalExams = exams.length;
+    const activeExams = exams.filter(
+      (e) => e.startDate <= now && e.endDate >= now
+    ).length;
+
+    // 3) Distinct students across all exams
+    const students = await Result.distinct("student", {
+      exam: { $in: examIds },
+    });
+    const totalStudents = students.length;
+
+    // 4) Overall average score
+    const overallAgg = await Result.aggregate([
+      { $match: { exam: { $in: examIds } } },
+      { $group: { _id: null, avgScore: { $avg: "$score" } } },
+    ]);
+    const averageScore = overallAgg.length
+      ? Math.round(overallAgg[0].avgScore)
+      : 0;
+
+    // 5) Recent exams (last 5) + per‐exam stats + full studentResults
+    const recentRaw = await Exam.find({ createdBy: teacherId })
+      .sort({ startDate: -1 })
+      .limit(5)
+      .select("title startDate endDate");
+
+    const recentExams = await Promise.all(
+      recentRaw.map(async (exam) => {
+        // a) submissions & avgScore
+        const stats = await Result.aggregate([
+          { $match: { exam: exam._id } },
+          {
+            $group: {
+              _id: null,
+              submissions: { $sum: 1 },
+              avgScore: { $avg: "$score" },
+            },
+          },
+        ]);
+
+        // b) full list of results for this exam
+        const studentResults = await Result.find({ exam: exam._id })
+          .populate("student", "name email")
+          .select("student score submittedAt timeSpent")
+          .sort({ submittedAt: -1 });
+
+        return {
+          id: exam._id,
+          title: exam.title,
+          submissions: stats.length ? stats[0].submissions : 0,
+          averageScore: stats.length ? Math.round(stats[0].avgScore) : 0,
+          studentResults, // ← here’s your exam.studentResult array
+        };
+      })
+    );
+
+    return res.json({
+      examStats: { totalExams, activeExams, totalStudents, averageScore },
+      recentExams,
+    });
+  } catch (err) {
+    console.error(err);
+    return res.status(500).json({ message: err.message });
   }
 };

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import {
   PlusCircle,
@@ -7,30 +7,24 @@ import {
   Settings,
   BarChart2,
   Library,
-  LogOut,
 } from "lucide-react";
 import { useAuthContext } from "../hooks/useAuthContext";
 import { useExamContext } from "../hooks/useExamContext";
-import { useLogout } from "../hooks/useLogout";
 import LogoutBtn from "../Components/LogoutBtn";
+import TeacherResultsModal from "../Components/TeacherResultsModel";
 
 function TeacherDashboard() {
   const navigate = useNavigate();
   const { user } = useAuthContext();
-  const { exams } = useExamContext();
-  const { logout } = useLogout();
-  const examStats = {
-    totalExams: 12,
-    activeExams: 3,
-    totalStudents: 150,
-    averageScore: 82,
-  };
-  console.log(exams, exams.length);
+  const { exams, teacherResults } = useExamContext();
+  const [selectedExamId, setSelectedExamId] = useState(null);
 
-  const recentExams = [
-    { id: 1, title: "Mathematics Final", submissions: 45, averageScore: 78 },
-    { id: 2, title: "Physics Mid-term", submissions: 38, averageScore: 85 },
-  ];
+  const examStats = teacherResults?.examStats;
+  const recentExams = teacherResults?.recentExams;
+
+  const handleViewResults = (examId) => {
+    setSelectedExamId(examId);
+  };
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -40,7 +34,7 @@ function TeacherDashboard() {
           <div className="flex sm:space-x-4 space-x-2 items-center">
             <button
               onClick={() => navigate("/exams/create")}
-              className="flex items-center px-4  sm:py-1 py-2 bg-blue-50 text-blue-900 rounded-md hover:bg-blue-100 transition "
+              className="flex items-center px-4 sm:py-1 py-2 bg-blue-50 text-blue-900 rounded-md hover:bg-blue-100 transition"
             >
               <PlusCircle className="w-5 h-5 sm:mr-2" />
               <p className="hidden sm:block">Create New Exam</p>
@@ -87,7 +81,7 @@ function TeacherDashboard() {
                       Active Exams
                     </dt>
                     <dd className="text-lg font-semibold text-gray-900">
-                      {examStats.activeExams}
+                      {examStats?.activeExams}
                     </dd>
                   </dl>
                 </div>
@@ -106,7 +100,7 @@ function TeacherDashboard() {
                       Total Students
                     </dt>
                     <dd className="text-lg font-semibold text-gray-900">
-                      {examStats.totalStudents}
+                      {examStats?.totalStudents}
                     </dd>
                   </dl>
                 </div>
@@ -125,7 +119,7 @@ function TeacherDashboard() {
                       Average Score
                     </dt>
                     <dd className="text-lg font-semibold text-gray-900">
-                      {examStats.averageScore}%
+                      {examStats?.averageScore}%
                     </dd>
                   </dl>
                 </div>
@@ -141,7 +135,7 @@ function TeacherDashboard() {
             </h3>
           </div>
           <div className="divide-y divide-gray-200">
-            {recentExams.map((exam) => (
+            {recentExams?.map((exam) => (
               <div key={exam.id} className="px-6 py-4">
                 <div className="flex items-center justify-between">
                   <div>
@@ -154,20 +148,26 @@ function TeacherDashboard() {
                       <span>Average score: {exam.averageScore}%</span>
                     </div>
                   </div>
-                  <div className="flex space-x-3">
-                    <button className="text-indigo-600 hover:text-indigo-800">
-                      View Results
-                    </button>
-                    <button className="text-indigo-600 hover:text-indigo-800">
-                      Edit Exam
-                    </button>
-                  </div>
+                  <button
+                    onClick={() => handleViewResults(exam.id)}
+                    className="text-indigo-600 hover:text-indigo-800"
+                  >
+                    View Results
+                  </button>
                 </div>
               </div>
             ))}
           </div>
         </div>
       </main>
+
+      {selectedExamId && (
+        <TeacherResultsModal
+          examId={selectedExamId}
+          results={recentExams}
+          onClose={() => setSelectedExamId(null)}
+        />
+      )}
     </div>
   );
 }

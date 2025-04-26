@@ -8,7 +8,7 @@ import axiosInstance from "../utils/axiosConfig";
 function TakeExam() {
   const navigate = useNavigate();
   const { examId } = useParams();
-  const { exams ,setFetch} = useExamContext();
+  const { exams ,setFetchStudentItem} = useExamContext();
 
   const [exam, setExam] = useState(null);
   const [answers, setAnswers] = useState({});
@@ -71,7 +71,7 @@ function TakeExam() {
       };
 
       await axiosInstance.post("/result/submit" , result);
-      setFetch(true)
+      setFetchStudentItem(true)
       navigate("/dashboard/student");
     } catch (error) {
       console.error("Failed to submit exam:", error);
