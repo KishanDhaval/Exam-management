@@ -1,36 +1,55 @@
-import React from 'react';
-import { useAuthStore } from '../store/authStore';
-import { PlusCircle, BookOpen, Users, Settings, BarChart2, Library } from 'lucide-react';
+import React from "react";
+import { useNavigate } from "react-router-dom";
+import {
+  PlusCircle,
+  BookOpen,
+  Users,
+  Settings,
+  BarChart2,
+  Library,
+  LogOut,
+} from "lucide-react";
+import { useAuthContext } from "../hooks/useAuthContext";
+import { useExamContext } from "../hooks/useExamContext";
+import { useLogout } from "../hooks/useLogout";
+import LogoutBtn from "../Components/LogoutBtn";
 
 function TeacherDashboard() {
-  const user = useAuthStore((state) => state.user);
-
+  const navigate = useNavigate();
+  const { user } = useAuthContext();
+  const { exams } = useExamContext();
+  const { logout } = useLogout();
   const examStats = {
     totalExams: 12,
     activeExams: 3,
     totalStudents: 150,
     averageScore: 82,
   };
+  console.log(exams, exams.length);
 
   const recentExams = [
-    { id: 1, title: 'Mathematics Final', submissions: 45, averageScore: 78 },
-    { id: 2, title: 'Physics Mid-term', submissions: 38, averageScore: 85 },
+    { id: 1, title: "Mathematics Final", submissions: 45, averageScore: 78 },
+    { id: 2, title: "Physics Mid-term", submissions: 38, averageScore: 85 },
   ];
 
   return (
     <div className="min-h-screen bg-gray-50">
       <header className="bg-white shadow">
         <div className="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8 flex justify-between items-center">
-          <h1 className="text-2xl font-semibold text-gray-900">Welcome, {user?.name}!</h1>
-          <div className="flex space-x-4">
-            <button className="flex items-center px-4 py-2 bg-indigo-600 text-white rounded-md hover:bg-indigo-700">
-              <PlusCircle className="w-5 h-5 mr-2" />
-              Create New Exam
+          <h1 className="text-2xl font-semibold text-gray-900">{user?.name}</h1>
+          <div className="flex sm:space-x-4 space-x-2 items-center">
+            <button
+              onClick={() => navigate("/exams/create")}
+              className="flex items-center px-4  sm:py-1 py-2 bg-blue-50 text-blue-900 rounded-md hover:bg-blue-100 transition "
+            >
+              <PlusCircle className="w-5 h-5 sm:mr-2" />
+              <p className="hidden sm:block">Create New Exam</p>
             </button>
             <button className="flex items-center text-gray-600 hover:text-gray-900">
               <Settings className="w-5 h-5 mr-2" />
-              Settings
+              <p className="hidden sm:block">Profile Settings</p>
             </button>
+            <LogoutBtn />
           </div>
         </div>
       </header>
@@ -45,8 +64,12 @@ function TeacherDashboard() {
                 </div>
                 <div className="ml-5 w-0 flex-1">
                   <dl>
-                    <dt className="text-sm font-medium text-gray-500 truncate">Total Exams</dt>
-                    <dd className="text-lg font-semibold text-gray-900">{examStats.totalExams}</dd>
+                    <dt className="text-sm font-medium text-gray-500 truncate">
+                      Total Exams
+                    </dt>
+                    <dd className="text-lg font-semibold text-gray-900">
+                      {exams?.length}
+                    </dd>
                   </dl>
                 </div>
               </div>
@@ -60,8 +83,12 @@ function TeacherDashboard() {
                 </div>
                 <div className="ml-5 w-0 flex-1">
                   <dl>
-                    <dt className="text-sm font-medium text-gray-500 truncate">Active Exams</dt>
-                    <dd className="text-lg font-semibold text-gray-900">{examStats.activeExams}</dd>
+                    <dt className="text-sm font-medium text-gray-500 truncate">
+                      Active Exams
+                    </dt>
+                    <dd className="text-lg font-semibold text-gray-900">
+                      {examStats.activeExams}
+                    </dd>
                   </dl>
                 </div>
               </div>
@@ -75,8 +102,12 @@ function TeacherDashboard() {
                 </div>
                 <div className="ml-5 w-0 flex-1">
                   <dl>
-                    <dt className="text-sm font-medium text-gray-500 truncate">Total Students</dt>
-                    <dd className="text-lg font-semibold text-gray-900">{examStats.totalStudents}</dd>
+                    <dt className="text-sm font-medium text-gray-500 truncate">
+                      Total Students
+                    </dt>
+                    <dd className="text-lg font-semibold text-gray-900">
+                      {examStats.totalStudents}
+                    </dd>
                   </dl>
                 </div>
               </div>
@@ -90,8 +121,12 @@ function TeacherDashboard() {
                 </div>
                 <div className="ml-5 w-0 flex-1">
                   <dl>
-                    <dt className="text-sm font-medium text-gray-500 truncate">Average Score</dt>
-                    <dd className="text-lg font-semibold text-gray-900">{examStats.averageScore}%</dd>
+                    <dt className="text-sm font-medium text-gray-500 truncate">
+                      Average Score
+                    </dt>
+                    <dd className="text-lg font-semibold text-gray-900">
+                      {examStats.averageScore}%
+                    </dd>
                   </dl>
                 </div>
               </div>
@@ -101,14 +136,18 @@ function TeacherDashboard() {
 
         <div className="bg-white shadow rounded-lg">
           <div className="px-6 py-5 border-b border-gray-200">
-            <h3 className="text-lg font-medium leading-6 text-gray-900">Recent Exams</h3>
+            <h3 className="text-lg font-medium leading-6 text-gray-900">
+              Recent Exams
+            </h3>
           </div>
           <div className="divide-y divide-gray-200">
             {recentExams.map((exam) => (
               <div key={exam.id} className="px-6 py-4">
                 <div className="flex items-center justify-between">
                   <div>
-                    <h4 className="text-lg font-medium text-gray-900">{exam.title}</h4>
+                    <h4 className="text-lg font-medium text-gray-900">
+                      {exam.title}
+                    </h4>
                     <div className="mt-1 flex items-center text-sm text-gray-500">
                       <span>{exam.submissions} submissions</span>
                       <span className="mx-2">•</span>
@@ -116,8 +155,12 @@ function TeacherDashboard() {
                     </div>
                   </div>
                   <div className="flex space-x-3">
-                    <button className="text-indigo-600 hover:text-indigo-800">View Results</button>
-                    <button className="text-indigo-600 hover:text-indigo-800">Edit Exam</button>
+                    <button className="text-indigo-600 hover:text-indigo-800">
+                      View Results
+                    </button>
+                    <button className="text-indigo-600 hover:text-indigo-800">
+                      Edit Exam
+                    </button>
                   </div>
                 </div>
               </div>

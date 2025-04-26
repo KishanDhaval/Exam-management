@@ -59,25 +59,26 @@ export const loginController = async (req, res) => {
   const { email, password } = req.body;
 
   try {
-    const token = createToken(user._id);
-
+    
     if (!email) throw Error("Email is required.");
     if (!password) throw Error("Password is required.");
     if (!validator.isEmail(email)) throw Error("Invalid email format.");
-
+    
     const user = await User.findOne({ email });
-
+    
     if (!user) throw Error("Invalid login credentials");
-
+    
     const match = await bcrypt.compare(password, user.password);
-
+    
     if (!match) {
       throw Error("Invalid login credentials");
     }
-
+    
     // Select the user excluding the password field and add the token
     const userWithoutPassword = await User.findById(user._id)
-      .select("-password")
+    .select("-password")
+    
+    const token = createToken(user._id);
 
     res.status(200).json({
       success: true,
@@ -88,6 +89,8 @@ export const loginController = async (req, res) => {
       },
     });
   } catch (error) {
+    console.log(error);
+    
     res.status(500).json({
       success: false,
       message: error.message,

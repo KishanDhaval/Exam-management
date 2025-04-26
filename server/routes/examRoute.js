@@ -5,9 +5,9 @@ import { createExam, getExamById, getAllExams, updateExam, deleteExam } from '..
 const router = express.Router();
 
 // Exam routes
-router.post('/exams', requireSignin, isTeacher, createExam);
-router.get('/exams', requireSignin, getAllExams);
-router.get('/exams/:id', requireSignin, getExamById);
+router.post('/create', requireSignin, isTeacher, createExam);
+router.get('/', requireSignin, getAllExams);
+router.get('/:id', requireSignin, getExamById);
 router.put('/exams/:id', requireSignin, isTeacher, updateExam);
 router.delete('/exams/:id', requireSignin, isTeacher, deleteExam);
 
