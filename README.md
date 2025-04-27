@@ -13,12 +13,6 @@ A full-stack online examination system built with the MERN stack. Teachers can c
   - [Installation](#installation)  
   - [Environment Variables](#environment-variables)  
   - [Running the App](#running-the-app)  
-- [Project Structure](#project-structure)  
-- [API Reference](#api-reference)  
-- [Folder Structure](#folder-structure)  
-- [Contributing](#contributing)  
-- [License](#license)  
-
 ---
 
 ## Features
@@ -40,9 +34,9 @@ A full-stack online examination system built with the MERN stack. Teachers can c
 
 ## Tech Stack
 
-- **Frontend:** React, React Router v6, Zustand, Tailwind CSS  
+- **Frontend:** React, Tailwind CSS  
 - **Backend:** Node.js, Express.js, MongoDB, Mongoose, JSON Web Tokens  
-- **Dev Tools:** VSCode, Nodemon, Postman / Insomnia  
+- **Dev Tools:** VSCode, Nodemon, Postman  
 
 ---
 
@@ -60,3 +54,28 @@ A full-stack online examination system built with the MERN stack. Teachers can c
    ```bash
    git clone https://github.com/your-username/exam-management.git
    cd exam-management
+   ```
+2. **Backend Setup**
+   ```base
+   cd server
+   npm install
+   cp .env.example .env
+   ```
+3. **Frontend Setup**
+   ```base
+   cd client
+   npm install
+   ```
+4. **environment-variables**
+   ```base
+   MONGO_URI=mongodb://localhost:27017/examdb
+   JWT_SECRET=your_jwt_secret_here
+   PORT=5000
+   ```
+5. **running-the-app**
+   ```base
+    cd server
+    npx nodemon
+    cd client
+    npm run dev
+   ```
