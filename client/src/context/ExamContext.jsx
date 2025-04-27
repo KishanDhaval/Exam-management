@@ -60,6 +60,7 @@ export const ExamContextProvider = ({ children }) => {
     <ExamContext.Provider
       value={{
         exams,
+        setExams,
         loading,
         setLoading,
         setResults,
