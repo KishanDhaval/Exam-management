@@ -79,3 +79,12 @@ A full-stack online examination system built with the MERN stack. Teachers can c
     cd client
     npm run dev
    ```
+
+   ![Image](https://github.com/user-attachments/assets/cb81ca6b-5512-4fc3-bff3-299526421dcd)
+![Image](https://github.com/user-attachments/assets/4b3c6674-bc9c-4602-97ea-46ed7cffcc69)
+![Image](https://github.com/user-attachments/assets/9da3ecd6-5e3a-47ab-a4e0-48cac0f74ab0)
+![Image](https://github.com/user-attachments/assets/cdda3491-a480-49a0-8c24-df8509406fcd)
+![Image](https://github.com/user-attachments/assets/1a3f58f8-0563-4578-9aaf-ff29e3c8edac)
+![Image](https://github.com/user-attachments/assets/d8370866-17ac-492b-875d-c8269c6ab638)
+![Image](https://github.com/user-attachments/assets/138d4327-f2ff-4d00-a8c9-358e472f7b78)
+![Image](https://github.com/user-attachments/assets/7bdbfd2d-3eb4-4657-8785-62c69e3cdb28)
